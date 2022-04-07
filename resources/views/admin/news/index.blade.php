@@ -51,6 +51,8 @@
                             <tr>
                                 <th>SL</th>
                                 <th>Title</th>
+                                <th>Catagory</th>
+                                <th>Date</th>
                                 <th>Option</th>
                             </tr>
                         </thead>
@@ -59,6 +61,9 @@
                             <tr>
                                 <td>{{ $loop->index+1 }}</td>
                                 <td>{{ $post->title }}</td>
+                                <td>{{ $post->catagory->name }}</td>
+                                <td>{{ $post->date }}</td>
+
                                 
                                 <td>
                                 <a href="{{route('news.edit',$post->id)}}" class="btn btn-sm btn-primary text-white text-center"><i class="far fa-edit"></i></a>
