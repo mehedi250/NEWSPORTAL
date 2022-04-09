@@ -12,19 +12,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-Route::get('/', [App\Http\Controllers\SiteController::class, 'index'])->name('site.index');
-Route::get('/fetch', [App\Http\Controllers\SiteController::class, 'fetch'])->name('site.fetch');
 Auth::routes();
-Route::get('/news/view/{id}', [App\Http\Controllers\SiteController::class, 'news'])->name('news.view');
-Route::get('/news/catagory/{id}', [App\Http\Controllers\SiteController::class, 'catagoryNews'])->name('news.catagory');
-Route::post('/news/comment/{id}', [App\Http\Controllers\SiteController::class, 'comment'])->name('news.comment');
+Route::group(['namespace' => 'App\Http\Controllers'], function(){
+    Route::get('/','SiteController@index')->name('site.index');
+    Route::get('/fetch', 'SiteController@fetch')->name('site.fetch');
+    Route::get('/news/view/{id}', 'SiteController@news')->name('news.view');
+    Route::get('/news/catagory/{id}', 'SiteController@catagoryNews')->name('news.catagory');
+    Route::post('/news/comment/{id}', 'SiteController@comment')->name('news.comment');
 
+});
 
-Route::get('/admin/deshboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
+Route::get('/admin/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
 
 Route::group(['prefix' => 'admin', 'namespace' => 'App\Http\Controllers'], function(){
     Route::middleware(['auth', 'verified'])->group(function() {

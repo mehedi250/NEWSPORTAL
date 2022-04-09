@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{{asset('assets/images/logo.png')}}">
 
         <title>NEWSPORTAL</title>
 
@@ -42,11 +43,9 @@
                     </li>
                     
                     @if (Route::has('login'))
-            
                     @auth
                     <li class="nav-item">
-            
-                        <a href="{{ url('/admin/deshboard') }}" class="nav-link" >Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link" >Dashboard</a>
                     </li>
                        
                     @else

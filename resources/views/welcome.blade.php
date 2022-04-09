@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{{asset('assets/images/logo.png')}}">
 
         <title>NEWSPORTAL</title>
 
@@ -25,6 +26,9 @@
                 overflow: hidden;
                 border-radius: 5px 5px 0px 0px;
             }
+            .search, .form-control{
+                max-width: 180px!important;
+            }
         </style>
     </head>
     <body class="">
@@ -46,7 +50,7 @@
                     @auth
                     <li class="nav-item">
             
-                        <a href="{{ url('/admin/deshboard') }}" class="nav-link" >Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link" >Dashboard</a>
                     </li>
                        
                     @else
@@ -62,10 +66,12 @@
               
                     @endif
                 </ul>
-                <form class="d-flex" action="{{route('site.index')}}" method="GET">
+                <!-- <form class="d-flex" action="{{route('site.index')}}" method="GET"> -->
+
                     <input class="form-control me-2 shadow-none" id="search" name="search" value="{{request()->search}}" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success shadow-none" type="submit">Search</button>
-                </form>
+                    <button class="btn btn-outline-success shadow-none"  id="search-btn" type="submit" onClick="searching();">Search</button>
+               
+                <!-- </form> -->
                 </div>
             </div>
         </nav>
@@ -76,8 +82,6 @@
                     <a href="{{route('news.catagory',$catagory->id)}}" class="btn btn-info px-3">{{$catagory->name}}</a>
                 @endforeach
             </div>
-
-
 
             <div class="row" id="fetchItem">
             
@@ -120,56 +124,71 @@
                     @endforeach
             </div>
                 
-            <div class="text-center py-4">
-                @if($totalPage>1)
-                <a class="btn btn-outline-primary" onClick="fetchFunction('p');">previous</a> 
-                @for($i=0; $i<$totalPage; $i++)
-                <a class="btn btn-outline-primary" id="pageBtn{{$i}}" onClick="fetchFunction({{$i}});">{{$i+1}}</a>
-                @endfor
-                <a class="btn btn-outline-primary"  onClick="fetchFunction('n');">Next</a>
-                @endif
+            <div class="text-center py-4" id="paginationSection">
+                @include('layouts.pagination')
             </div>
-
-            
-
-            
         </div>
-
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script>
             var page = 0;
-            var search = document.getElementById('search').value;
+            var totalPage = {{$totalPage}};
+            var search = "";
+            disableButton();
+
+            function searching(){
+                page = 0;
+                search = document.getElementById('search').value;
+                fetchFunction(0);
+            }
             
             function fetchFunction(p){
                 if( p == 'p'){
                     page = page - 1;
                     if(page<0){
                         page = 0;
+                        return;
                     }
                 }
                 else if( p == 'n'){
                     page = page + 1;
-                    let max = {{$totalPage}}-1;
+                    let max = totalPage-1;
                     if(page>max){
                         page = max;
+                        return;
                     }
                 }
                 else{
                     page = p;
                 }
 
-
                 fetch('{{route('site.fetch')}}?page='+page+'&search='+search)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('fetchItem').innerHTML=data.html;
-                });    
-            }
+                    document.getElementById('paginationSection').innerHTML=data.pagination;
+                    totalPage = data.totalPage;
+                    disableButton()
+                })
+                .catch(function(error) {
+                    console.log(error);
+                }); 
             
+                // disableButton();
+                // setTimeout(disableButton, 500);
+            }
 
-
-
+            function disableButton(){
+                if(page == 0) {
+                    document.getElementById("pageBtnPrevious").disabled = true;
+                }
+                if(page == totalPage-1){
+                    document.getElementById("pageBtnNext").disabled = true;
+                }
+                document.getElementById("pageBtn"+page).disabled = true;
+            }
+     
+  
         </script>
     
     </body>

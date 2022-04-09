@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{{asset('assets/images/logo.png')}}">
 
         <title>NEWSPORTAL</title>
 
@@ -40,7 +41,7 @@
                     @auth
                     <li class="nav-item">
             
-                        <a href="{{ url('/admin/deshboard') }}" class="nav-link" >Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link" >Dashboard</a>
                     </li>
                        
                     @else
@@ -87,27 +88,7 @@
                             <div>
                                 {!! $news->content !!}
                             </div> 
-                            @auth
-                            <form  method="POST" action="{{route('news.comment',$news->id)}}" class="form-horizontal" enctype="multipart/form-data" >
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12 py-3">
-                                        <div class="form-group">
-                                            <label for="comment">Comment <span class="text-danger position-relative">*</span></label>
-                                            <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Enter Your Comment" required  class="form-control shadow-none">  </textarea>
-                                            @error('comment') 
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <button type="submit" id="" class="btn btn-primary float-right">Submit</button>
-
-                                    </div>
-                                    
-                                </div>
-                            </form>
-                            @endauth
+                            
                             <div class=" py-5">
                                 <h4>{{$news->comments->count()}} Comments</h4>
                                 @foreach($news->comments as $comment)
@@ -126,6 +107,27 @@
                                 @endforeach
 
                             </div>
+                            @auth
+                            <form  method="POST" action="{{route('news.comment',$news->id)}}" class="form-horizontal" enctype="multipart/form-data" >
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 py-3">
+                                        <div class="form-group">
+                                            <label for="comment">Comment <span class="text-danger position-relative">*</span></label>
+                                            <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Enter Your Comment" required  class="form-control shadow-none"></textarea>
+                                            @error('comment') 
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" id="" class="btn btn-primary float-right">Submit</button>
+
+                                    </div>
+                                    
+                                </div>
+                            </form>
+                            @endauth
                         </div>
                     </div>  
                 </div>
