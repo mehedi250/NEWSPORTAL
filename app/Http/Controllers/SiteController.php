@@ -6,6 +6,8 @@ use App\Models\Catagory;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 
+use App\Http\Repository\Service;
+
 class SiteController extends Controller
 {
     public function index(Request $request)
