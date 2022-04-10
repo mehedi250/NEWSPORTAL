@@ -7,7 +7,11 @@ class CatagoryData
 {
     public function index()
     {
-        $catagories = Catagory::all();
-        return $catagories;
+        return  Catagory::get();
+    }
+
+    public function find($id)
+    {
+        return  Catagory::find($id);
     }
 }

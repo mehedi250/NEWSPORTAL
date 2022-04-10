@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
-use App\Models\News;
-use App\Models\Catagory;
-use App\Models\Comment;
 use Illuminate\Http\Request;
-
 use App\Http\Service\Service;
 
 class SiteController extends Controller
@@ -25,7 +21,8 @@ class SiteController extends Controller
     }
     public function news($id)
     {
-        $data['news'] = News::find($id);
+        $serv = new Service();
+        $data['news'] = $serv->findNews($id);
         return view('news', $data);
     }
     public function catagoryNews($id)
@@ -38,7 +35,7 @@ class SiteController extends Controller
     {
         if (Auth::check()) {
             $serv = new Service();
-            $data = $serv->storeComment($request, $id);
+            $serv->storeComment($request, $id);
             return redirect()->route('news.view', $id);
         }
         else abort(404);

@@ -1,11 +1,6 @@
 <?php
 
 namespace App\Http\Service;
-
-use App\Models\Catagory;
-use App\Models\Comment;
-use App\Models\News;
-
 use App\Http\Repository\NewsData;
 use App\Http\Repository\CatagoryData;
 use App\Http\Repository\CommentData;
@@ -40,12 +35,13 @@ class Service
         $rules = [
             'comment' => 'bail|required',
         ];
-
         $request->validate($rules);
         $postData = $request->only(['comment']);
         $postData['user_id'] = auth()->id();
         $postData['news_id'] = $id;
-        $comment = Comment::create($postData);
+
+        $commentData = new CommentData();
+        $commentData->store($postData);
     }
 
     public function indexNews()
@@ -63,10 +59,21 @@ class Service
         return $data;
     }
 
+    public function findNews($id)
+    {
+        $newsData = new NewsData();
+        $news = $newsData->findNews($id);
+        return $news;
+    }
+
     public function catagoryNews($id){
-        $data['catagories'] = Catagory::all();
-        $data['newsCatagory'] = Catagory::find($id);
-        $data['news'] = News::where('catagory_id', $id)->orderBy('date', 'desc')->get();
+        $catagoryData = new CatagoryData();
+        $newsData = new NewsData();
+
+        $data['catagories'] = $catagoryData->index();
+        $data['newsCatagory'] = $catagoryData->find($id);
+        $data['news'] = $newsData->catagoryNews($id);
+
         return $data;
     }
 

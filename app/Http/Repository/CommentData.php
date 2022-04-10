@@ -5,8 +5,8 @@ use App\Models\Comment;
 
 class CommentData
 {
-    public function index($request)
+    public function store($postData)
     {
-        
+        Comment::create($postData);
     }
 }
